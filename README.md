@@ -3,14 +3,14 @@
 **Authors:** Jacob Buckley
 <pre>
 small java.net chat server and client
-right now the client only flushes when it sends data which leads to really odd message orders.
+not super working atm, client is reciving all msgs but client thread is having a hard time pulling them
 
 
 ToDo:
-need to either multi-thread the client to continiously flush or set up some kinda timer system.
+learn multithreading princibles
 make it pretty and formal.
-setup maven efficiently
-Integrate into my uno project
+setup maven efficiently.
+Integrate into my uno project.
 
 </pre>
 
