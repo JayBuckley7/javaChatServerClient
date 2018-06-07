@@ -3,6 +3,7 @@
 **Authors:** Jacob Buckley
 <pre>
 small java.net chat server and client
+right now the client only flushes when it sends data which leads to really odd message orders.
 
 
 ToDo:
