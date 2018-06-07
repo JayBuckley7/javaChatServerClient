@@ -1,6 +1,5 @@
 package com.chat;
 
-
 import java.io.BufferedReader;
 import java.io.IOException;
 import java.io.InputStreamReader;
@@ -12,16 +11,22 @@ import java.util.Scanner;
 
 /**
  * connects to the server, gets and sends messages from other clients
+ * 
  * @author Jay Buckley
  */
-public class ChatClient {
+public class ChatClient implements Runnable {
+	static PrintWriter pw;
+	static BufferedReader brServer;
+	static String serverHost;
+	static int serverPort;
+
 	/**
 	 * Provides simple input from the console
 	 */
 
 	/**
-	 * main method where the things happen defines server ip, port, and client
-	 * name sends and receives messages
+	 * main method where the things happen defines server ip, port, and client name
+	 * sends and receives messages
 	 * 
 	 * @param args
 	 *            java is old -
@@ -30,16 +35,16 @@ public class ChatClient {
 		/**
 		 * some information about the client
 		 */
-	    Scanner in = new Scanner(System.in);
-	    String name = "";
+		Scanner in = new Scanner(System.in);
+		String name = "";
 		System.out.println("ChatClient started at " + new Date().toString());
-		final String serverHost = "localhost";// consoleReader.getString("Enter
-												// server's host name or IP: ");
-		final int serverPort = 1500;// consoleReader.getPortNumber("Enter
-									// server's port number: ");
-		
-	      System.out.print("name: ");
-	      name = in.nextLine();
+		serverHost = "localhost";// consoleReader.getString("Enter
+									// server's host name or IP: ");
+		System.out.print("Enter server's port number: ");
+		serverPort = in.nextInt();
+
+		System.out.print("name: ");
+		name = in.nextLine();
 		/**
 		 * connect to specified server
 		 */
@@ -52,25 +57,21 @@ public class ChatClient {
 			/**
 			 * defines some data streams to look at
 			 */
-			PrintWriter pw = new PrintWriter(chatClientSocket.getOutputStream());
-			BufferedReader brServer = new BufferedReader(new InputStreamReader(chatClientSocket.getInputStream()));
+			pw = new PrintWriter(chatClientSocket.getOutputStream());
 			BufferedReader brClient = new BufferedReader(new InputStreamReader(System.in));
+
+			ChatClient c = new ChatClient();
+			Thread t = new Thread(c);
+			t.start();
+
 			/**
 			 * reads in messages and sends them back out
 			 */
 			String inText;
-			System.out.println("Enter Message");
+			System.out.println("Enter Message: ");
 			while ((inText = in.nextLine()) != null) {
 				pw.println("from " + name + "::" + inText);
 				pw.flush();
-
-				String outText = brServer.readLine();
-				if (outText == null) {
-					System.out.println("ChatServer has died");
-					System.exit(0);
-				}
-				String newText = outText.replace("/000", "\n");
-				System.out.println(newText);
 				System.out.print("Enter message: ");
 			}
 
@@ -85,4 +86,34 @@ public class ChatClient {
 
 		}
 	}
+
+	@Override
+	public void run() {
+
+		boolean loop = true;
+		try {
+		Socket chatClientSocket = new Socket(serverHost, serverPort);
+		BufferedReader brServer = new BufferedReader(new InputStreamReader(chatClientSocket.getInputStream()));
+
+		while (loop) {
+
+			String outText = brServer.readLine();
+			
+			if (outText == null) {
+				System.out.println("ChatServer has died");
+				loop = false;
+				System.exit(0);
+			}
+			
+			String newText = outText.replace("/000", "\n");
+			System.out.println(newText);
+		}
+		
+		chatClientSocket.close();
+	}catch (IOException e) {
+		e.printStackTrace();
+
+	}
+	}
+
 }
