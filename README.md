@@ -11,10 +11,12 @@ learn multithreading princibles
 make it pretty and formal.
 setup maven efficiently.
 Integrate into my uno project.
+fix pom.xml
 
 </pre>
 
 ## Instruction and Use
+not yet working
 <pre>
 git clone https://github.com/JayBuckley7/javaChatServerClient
 cd javaChatServerClient/ 
