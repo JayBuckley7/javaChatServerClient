@@ -19,6 +19,6 @@ Integrate into my uno project.
 git clone https://github.com/JayBuckley7/javaChatServerClient
 cd javaChatServerClient/ 
 mvn clean install 
-///I'll add the rest of these instructions when this works better and I figure out how best to use maven 
+java -cp ./target/ServerClientsChat-1.0.0-SNAPSHOT com.chat.ChatServer
 </pre>
 
