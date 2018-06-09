@@ -15,10 +15,15 @@ import java.util.Scanner;
  * @author Jay Buckley
  */
 public class ChatClient implements Runnable {
-	static PrintWriter pw;
-	static BufferedReader brServer;
-	static String serverHost;
-	static int serverPort;
+
+	private static final Scanner in = new Scanner(System.in);
+	private static String h;
+	private static int p;
+
+	public ChatClient(String h2, int p2) {
+		h=h2;
+		p=p2;
+	}
 
 	/**
 	 * Provides simple input from the console
@@ -35,19 +40,21 @@ public class ChatClient implements Runnable {
 		/**
 		 * some information about the client
 		 */
-		Scanner in = new Scanner(System.in);
-		String name = "";
 		System.out.println("ChatClient started at " + new Date().toString());
-		serverHost = "localhost";// consoleReader.getString("Enter
-									// server's host name or IP: ");
-		System.out.print("Enter server's port number: ");
-		serverPort = in.nextInt();
-
+		final String serverHost = "localhost";// consoleReader.getString("Enter
+												// server's host name or IP: ");
+		h= serverHost;
+		final int serverPort = 1500;// consoleReader.getPortNumber("Enter
+									// server's port number: ");
+		p=serverPort;
 		System.out.print("name: ");
-		name = in.nextLine();
+		final String name = in.nextLine();
 		/**
 		 * connect to specified server
 		 */
+		ChatClient c = new ChatClient(h,p);
+		Thread t = new Thread(c);
+		t.start();
 		try {
 			InetAddress server = InetAddress.getByName(serverHost);
 			System.out.println("Connecting to " + server.getCanonicalHostName() + " on port " + serverPort);
@@ -57,22 +64,17 @@ public class ChatClient implements Runnable {
 			/**
 			 * defines some data streams to look at
 			 */
-			pw = new PrintWriter(chatClientSocket.getOutputStream());
+			PrintWriter pw = new PrintWriter(chatClientSocket.getOutputStream());
+			BufferedReader brServer = new BufferedReader(new InputStreamReader(chatClientSocket.getInputStream()));
 			BufferedReader brClient = new BufferedReader(new InputStreamReader(System.in));
-
-			ChatClient c = new ChatClient();
-			Thread t = new Thread(c);
-			t.start();
-
 			/**
 			 * reads in messages and sends them back out
 			 */
 			String inText;
-			System.out.println("Enter Message: ");
+			System.out.print("\nEnter Message:... ");
 			while ((inText = in.nextLine()) != null) {
-				pw.println("from " + name + "::" + inText);
+				pw.println(name + "::" + inText);
 				pw.flush();
-				System.out.print("Enter message: ");
 			}
 
 			System.out.println("Closing connection with ChatServer");
@@ -89,31 +91,43 @@ public class ChatClient implements Runnable {
 
 	@Override
 	public void run() {
-
+		System.out.println("hey jay: Thread here. ");
 		boolean loop = true;
 		try {
-		Socket chatClientSocket = new Socket(serverHost, serverPort);
-		BufferedReader brServer = new BufferedReader(new InputStreamReader(chatClientSocket.getInputStream()));
+			InetAddress server = InetAddress.getByName(h);
+			Socket chatClientSocket = new Socket(h, p);
+			/**
+			 * defines some data streams to look at
+			 */
+			PrintWriter pw = new PrintWriter(chatClientSocket.getOutputStream());
+			BufferedReader brServer = new BufferedReader(new InputStreamReader(chatClientSocket.getInputStream()));
+			BufferedReader brClient = new BufferedReader(new InputStreamReader(System.in));
+			/**
+			 * reads in messages and sends them back out
+			 */
+			boolean looping = true;
+			while (looping) {
+				pw.println();
+				pw.flush();
 
-		while (loop) {
-
-			String outText = brServer.readLine();
-			
-			if (outText == null) {
-				System.out.println("ChatServer has died");
-				loop = false;
-				System.exit(0);
+				String outText = brServer.readLine();
+				String newText = outText.replace("/000", "\n");
+				if(!newText.equals("")) {
+				System.out.println(newText);
+				}
+				Thread.sleep(500);
 			}
-			
-			String newText = outText.replace("/000", "\n");
-			System.out.println(newText);
-		}
-		
-		chatClientSocket.close();
-	}catch (IOException e) {
-		e.printStackTrace();
 
-	}
+			System.out.println("Closing connection with ChatServer");
+
+			pw.close();
+			brClient.close();
+			brServer.close();
+			chatClientSocket.close();
+		} catch (IOException | InterruptedException e) {
+			e.printStackTrace();
+
+		}
 	}
 
 }

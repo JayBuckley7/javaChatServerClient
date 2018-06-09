@@ -1,9 +1,3 @@
-//===================================
-// Columbus State Community College
-// CSCI 2469 - Spring Semester 2017
-// Assignment: Lab8
-// Programmer: Craig Wright
-//===================================
 
 package com.chat;
 
@@ -36,7 +30,7 @@ public class ChatServer {
 	public static void main(String[] args) {
 		System.out.println("ChatServer started at " + new Date().toString());
 		System.out.println("port number:  ");
-		final int serverPort = in.nextInt();
+		final int serverPort = 1500; //in.nextInt();
 
 		try (ServerSocket serverSocket = new ServerSocket(serverPort)) {
 			System.out.println("Listening for connections on port " + serverSocket.getLocalPort());
