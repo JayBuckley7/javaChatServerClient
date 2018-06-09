@@ -1,6 +1,6 @@
 # [javaChatServerClient]
 
-**Authors:** Jacob Buckley
+**Authors:** Jacob Buckley, Craig Wright
 <pre>
 small java.net chat server and client
 not super working atm, client is reciving all msgs but client thread is having a hard time pulling them
