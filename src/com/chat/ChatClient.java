@@ -21,8 +21,8 @@ public class ChatClient implements Runnable {
 	private static int p;
 
 	public ChatClient(String h2, int p2) {
-		h=h2;
-		p=p2;
+		h = h2;
+		p = p2;
 	}
 
 	/**
@@ -43,16 +43,16 @@ public class ChatClient implements Runnable {
 		System.out.println("ChatClient started at " + new Date().toString());
 		final String serverHost = "localhost";// consoleReader.getString("Enter
 												// server's host name or IP: ");
-		h= serverHost;
+		h = serverHost;
 		final int serverPort = 1500;// consoleReader.getPortNumber("Enter
 									// server's port number: ");
-		p=serverPort;
+		p = serverPort;
 		System.out.print("name: ");
 		final String name = in.nextLine();
 		/**
 		 * connect to specified server
 		 */
-		ChatClient c = new ChatClient(h,p);
+		ChatClient c = new ChatClient(h, p);
 		Thread t = new Thread(c);
 		t.start();
 		try {
@@ -112,8 +112,8 @@ public class ChatClient implements Runnable {
 
 				String outText = brServer.readLine();
 				String newText = outText.replace("/000", "\n");
-				if(!newText.equals("")) {
-				System.out.println(newText);
+				if (!newText.equals("")) {
+					System.out.println(newText);
 				}
 				Thread.sleep(500);
 			}

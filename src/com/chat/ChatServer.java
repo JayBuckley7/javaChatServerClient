@@ -17,7 +17,7 @@ import java.util.Scanner;
 /** - */
 public class ChatServer {
 	/** - */
-	 static Scanner in = new Scanner(System.in);
+	static Scanner in = new Scanner(System.in);
 
 	private static final Map<String, List<String>> clientList = new HashMap<>();
 
@@ -30,7 +30,7 @@ public class ChatServer {
 	public static void main(String[] args) {
 		System.out.println("ChatServer started at " + new Date().toString());
 		System.out.println("port number:  ");
-		final int serverPort = 1500; //in.nextInt();
+		final int serverPort = 1500; // in.nextInt();
 
 		try (ServerSocket serverSocket = new ServerSocket(serverPort)) {
 			System.out.println("Listening for connections on port " + serverSocket.getLocalPort());
@@ -76,10 +76,10 @@ public class ChatServer {
 				BufferedReader br = new BufferedReader(new InputStreamReader(socket.getInputStream()));
 
 				String inputLine;
-				while ((inputLine = br.readLine()) != null) 
-				{
-					System.out.println("Client=" + this.getName() + " Received Message='" + inputLine + "'");
-					
+				while ((inputLine = br.readLine()) != null) {
+					if (!inputLine.equals("")) {
+						System.out.println("Client=" + this.getName() + " Received Message='" + inputLine + "'");
+					}
 					List<String> myList = null;
 					synchronized (clientList) {
 						for (String threadName : clientList.keySet()) {
