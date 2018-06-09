@@ -7,7 +7,8 @@ not super working atm, client is reciving all msgs but client thread is having a
 
 
 ToDo:
-learn multithreading princibles
+
+server needs to distinguish threads better so you dont revieve your own messages
 make it pretty and formal.
 setup maven efficiently.
 Integrate into my uno project.
